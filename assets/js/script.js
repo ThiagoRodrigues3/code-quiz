@@ -85,7 +85,7 @@ var totalTime = 60;
 var startEl = $("#startQuiz");
 var scoreEl = $("#score");
 var submitBtnEl = $("#submit");
-var highscoreBtnEl = $("#highscore");
+var highscoreBtnEl = $("#score");
 var scoresEl = $("#scores");
 var highscore;
 var totalPoints = 0;
@@ -155,7 +155,7 @@ function endGame() {
 function answeredRight() {
   totalPoints += 10;
   count++;
-  if (count === questions.length) {
+  if (totalTime === 0 || count === questions.length) {
     endGame();
   } else {
     generateQuestions();
@@ -166,7 +166,7 @@ function answeredWrong() {
   totalPoints -= 5;
   count++;
   totalTime -= 10;
-  if (count === questions.length) {
+  if (totalTime === 0 || count === questions.length) {
     endGame();
   } else {
     generateQuestions();
@@ -186,9 +186,8 @@ function setTheInterval(){
     var interval = setInterval(function () {
   totalTime--;
   timerSpan.text('Time Left: ' + totalTime);
-  if (totalTime === 0 || lastQ) {
+  if (lastQ) {
     clearInterval(interval);
-    endGame();
   }
 }, 1000);}
 
