@@ -81,7 +81,7 @@ var questions = [
   },
 ];
 
-var timeLeft = 60;
+var totalTime = 60;
 var startEl = $("#startQuiz");
 var scoreEl = $("#score");
 var submitBtnEl = $("#submit");
@@ -109,7 +109,7 @@ submitBtnEl.on("click", function () {
     );
   }
 
-  var input = $("#initials").value;
+  var input = $("#initials").val()
   var score = totalPoints + totalTime;
   highscore = JSON.parse(localStorage.getItem("Highscore")).highscore;
   var allScores = JSON.parse(localStorage.getItem("Highscore")).highscoreArr;
@@ -117,7 +117,7 @@ submitBtnEl.on("click", function () {
   if (score > highscore) {
     highscore = score;
   }
-  allscores.push(input + score);
+  allScores.push(input + score);
   localStorage.setItem(
     "Highscore",
     JSON.stringify({
@@ -130,8 +130,8 @@ submitBtnEl.on("click", function () {
 });
 
 function startAgain() {
-  endQuiz.style.display = "none";
-  startOverScreen.style.display = "flex";
+  endQuiz.hide()
+  startOverScreen.show()
 }
 
 restartBtn.on("click", function () {
@@ -139,21 +139,21 @@ restartBtn.on("click", function () {
   count = 0;
   totalPoints = 0;
   lastQ = false;
-  start.style.display = "block";
-  quiz.style.display = "none";
-  startOverScreen.style.display = "none";
+  start.show()
+  quiz.hide()
+  startOverScreen.hide()
 });
 
 function endGame() {
   lastQ = true;
-  quiz.style.display = "none";
-  end.style.display = "block";
+  quiz.hide();
+  endQuiz.show()
   var score = totalPoints + totalTime;
-  scoreEl.textContent = score;
+  scoreEl.text(score)
 }
 
 function answeredRight() {
-  totalPoints + 10;
+  totalPoints += 10;
   count++;
   if (count === questions.length) {
     endGame();
@@ -165,7 +165,7 @@ function answeredRight() {
 function answeredWrong() {
   totalPoints -= 5;
   count++;
-  totalTime - 10;
+  totalTime -= 10;
   if (count === questions.length) {
     endGame();
   } else {
@@ -174,16 +174,39 @@ function answeredWrong() {
 }
 
 startEl.on("click", function () {
-  start.hide()
-  quiz.show()
+  start.hide();
+  quiz.show();
   generateQuestions();
 
   var interval = setInterval(function () {
     totalTime--;
-    timerSpan.innerHTML = totalLeft;
+    timerSpan.text('Time Left: ' + totalTime);
     if (totalTime === 0 || lastQ) {
       clearInterval(interval);
       endGame();
     }
   }, 1000);
 });
+
+function generateQuestions() {
+  let title = questions[count].title;
+  let choices = questions[count].choices;
+  let answer = questions[count].answer;
+  let choiceEl = $("#choiceBtns");
+
+  $("#quizQ").text(title);
+  $("#choiceBtns").text("");
+
+  $.each(choices, function (i, value) {
+    let btn = document.createElement("button");
+    $(btn).text(value);
+    $(choiceEl).append($(btn));
+    $(btn).addClass("btn btn-lg btn-block btn-outline-info");
+  });
+
+  $("#choiceBtns").on("click",'button', function () {
+    if ($(this).text === answer) {
+      answeredRight();
+    } else {answeredWrong();}
+  });
+}
