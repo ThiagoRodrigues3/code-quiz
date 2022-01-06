@@ -176,17 +176,23 @@ function answeredWrong() {
 startEl.on("click", function () {
   start.hide();
   quiz.show();
+  setTheInterval()
   generateQuestions();
 
-  var interval = setInterval(function () {
-    totalTime--;
-    timerSpan.text('Time Left: ' + totalTime);
-    if (totalTime === 0 || lastQ) {
-      clearInterval(interval);
-      endGame();
-    }
-  }, 1000);
 });
+
+
+function setTheInterval(){
+    var interval = setInterval(function () {
+  totalTime--;
+  timerSpan.text('Time Left: ' + totalTime);
+  if (totalTime === 0 || lastQ) {
+    clearInterval(interval);
+    endGame();
+  }
+}, 1000);}
+
+
 
 function generateQuestions() {
   let title = questions[count].title;
