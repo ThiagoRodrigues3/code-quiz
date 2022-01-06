@@ -85,7 +85,7 @@ var totalTime = 60;
 var startEl = $("#startQuiz");
 var scoreEl = $("#score");
 var submitBtnEl = $("#submit");
-var highscoreBtnEl = $("#highscoreBtn");
+var highscoreBtnEl = $(".highscoreBtn");
 var scoresEl = $("#scores");
 var highscore;
 var totalPoints = 0;
@@ -214,4 +214,22 @@ function generateQuestions() {
     });
   });
 }
+highscoreBtnEl.on("click",function(){
+  quiz.hide()
+  start.hide()
+  startOverScreen.hide()
+  endQuiz.hide()
 
+scoresEl.show();
+var highscoreArray = JSON.parse(localStorage.getItem('Highscore'))
+
+for (let i = 0; i < highscoreArray.highscoreArr.length; i++) {
+  var listScore = document.createElement('li') 
+  listScore.textContent= (highscoreArray.highscoreArr[i])
+  $('#highscoreDsp').append(listScore)
+  
+}})
+
+var obj ={
+  key:'value'
+}
