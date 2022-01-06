@@ -1,4 +1,15 @@
+p {
+  text-align: center;
+}
+
 footer {
-    text-align: center;
-    font-weight: bold;
-  }
+  text-align: center;
+  font-weight: bold;
+}
+
+#quiz,
+#end,
+#startOver,
+#scores {
+  display: none;
+}

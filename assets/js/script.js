@@ -81,12 +81,109 @@ var questions = [
   },
 ];
 
-var timeLeft = 60
-var startEl = $('#startQuiz')
-var scoreEl = $('#score')
-var submitBtnEl = $('#submit')
-var highscoreBtnEl = $('#highscore')
-var scoresEl = $('#scores')
-var highscore
-var totalPoints = 0
-var lastQ = false
+var timeLeft = 60;
+var startEl = $("#startQuiz");
+var scoreEl = $("#score");
+var submitBtnEl = $("#submit");
+var highscoreBtnEl = $("#highscore");
+var scoresEl = $("#scores");
+var highscore;
+var totalPoints = 0;
+var lastQ = false;
+var count = 0;
+var startOverScreen = $("#startOver");
+var restartBtn = $("#restartBtn");
+var timerSpan = $("#timer");
+var start = $("#start");
+var quiz = $("#quiz");
+var endQuiz = $("#end");
+
+submitBtnEl.on("click", function () {
+  if (localStorage.getItem("Highscore") === null) {
+    localStorage.setItem(
+      "Highscore",
+      JSON.stringify({
+        highscore: 0,
+        highscoreArr: [],
+      })
+    );
+  }
+
+  var input = $("#initials").value;
+  var score = totalPoints + totalTime;
+  highscore = JSON.parse(localStorage.getItem("Highscore")).highscore;
+  var allScores = JSON.parse(localStorage.getItem("Highscore")).highscoreArr;
+
+  if (score > highscore) {
+    highscore = score;
+  }
+  allscores.push(input + score);
+  localStorage.setItem(
+    "Highscore",
+    JSON.stringify({
+      highscore,
+      highscoreArr: allScores,
+    })
+  );
+
+  startAgain();
+});
+
+function startAgain() {
+  endQuiz.style.display = "none";
+  startOverScreen.style.display = "flex";
+}
+
+restartBtn.on("click", function () {
+  totalTime = 60;
+  count = 0;
+  totalPoints = 0;
+  lastQ = false;
+  start.style.display = "block";
+  quiz.style.display = "none";
+  startOverScreen.style.display = "none";
+});
+
+function endGame() {
+  lastQ = true;
+  quiz.style.display = "none";
+  end.style.display = "block";
+  var score = totalPoints + totalTime;
+  scoreEl.textContent = score;
+}
+
+function answeredRight() {
+  totalPoints + 10;
+  count++;
+  if (count === questions.length) {
+    endGame();
+  } else {
+    generateQuestions();
+  }
+}
+
+function answeredWrong() {
+  totalPoints -= 5;
+  count++;
+  totalTime - 10;
+  if (count === questions.length) {
+    endGame();
+  } else {
+    generateQuestions();
+  }
+}
+
+startEl.on("click", function () {
+  start.hide()
+  quiz.show()
+  generateQuestions();
+
+  var interval = setInterval(function () {
+    totalTime--;
+    timerSpan.innerHTML = totalLeft;
+    if (totalTime === 0 || lastQ) {
+      clearInterval(interval);
+      endGame();
+    }
+  }, 1000);
+});
