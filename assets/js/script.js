@@ -207,11 +207,10 @@ function generateQuestions() {
     $(btn).text(value);
     $(choiceEl).append($(btn));
     $(btn).addClass("btn btn-lg btn-block btn-outline-info");
-  });
-
-  $("#choiceBtns").on("click",'button', function () {
-    if ($(this).text === answer) {
-      answeredRight();
-    } else {answeredWrong();}
+    $(btn).on("click", function () {
+      if ($(this).text === answer) {
+        answeredRight();
+      } else {answeredWrong();}
+    });
   });
 }
